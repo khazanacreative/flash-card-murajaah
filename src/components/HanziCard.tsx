@@ -1,20 +1,22 @@
 import { cn } from '@/lib/utils';
-import { Vocabulary, getLevelInfo } from '@/utils/scoring';
+import { Vocabulary } from '@/data/hskVocabulary';
+import { getLevelInfo } from '@/utils/scoring';
 import { Eye, EyeOff, Volume2 } from 'lucide-react';
 import { useState, forwardRef } from 'react';
 import beijingLogo from '@/assets/beijing-institute-pare.png';
 
-interface MufradatCardProps {
-  mufradat: Vocabulary;
+interface HanziCardProps {
+  vocabulary: Vocabulary;
   flashAnimation?: 'correct' | 'wrong' | null;
+  showPinyinToggle?: boolean;
   showMeaningToggle?: boolean;
 }
 
-export const MufradatCard = forwardRef<HTMLDivElement, MufradatCardProps>(
-  ({ mufradat, flashAnimation, showMeaningToggle = true }, ref) => {
+export const HanziCard = forwardRef<HTMLDivElement, HanziCardProps>(
+  ({ vocabulary, flashAnimation, showPinyinToggle = true, showMeaningToggle = true }, ref) => {
     const [showPinyin, setShowPinyin] = useState(false);
     const [showMeaning, setShowMeaning] = useState(false);
-    const levelInfo = getLevelInfo(mufradat.level);
+    const levelInfo = getLevelInfo(vocabulary.level);
 
     const levelBadgeClass = {
       1: 'badge-hsk-1',
@@ -22,7 +24,7 @@ export const MufradatCard = forwardRef<HTMLDivElement, MufradatCardProps>(
       3: 'badge-hsk-3',
       4: 'badge-hsk-4',
       5: 'badge-hsk-5',
-    }[mufradat.level];
+    }[vocabulary.level];
 
     return (
       <div
@@ -69,7 +71,7 @@ export const MufradatCard = forwardRef<HTMLDivElement, MufradatCardProps>(
         {/* Hanzi (Chinese character) */}
         <div className="mb-6 text-center">
           <p className="font-chinese text-6xl leading-relaxed text-foreground sm:text-7xl md:text-8xl">
-            {mufradat.hanzi}
+            {vocabulary.hanzi}
           </p>
         </div>
 
@@ -79,30 +81,32 @@ export const MufradatCard = forwardRef<HTMLDivElement, MufradatCardProps>(
         </div>
 
         {/* Pinyin toggle - above meaning */}
-        <div className="mb-4 text-center">
-          <button
-            onClick={() => setShowPinyin(!showPinyin)}
-            className="inline-flex items-center gap-2 rounded-lg bg-secondary px-4 py-2 text-sm font-medium text-secondary-foreground transition-colors hover:bg-secondary/80"
-          >
-            {showPinyin ? (
-              <>
-                <EyeOff className="h-4 w-4" />
-                Sembunyikan Pinyin
-              </>
-            ) : (
-              <>
-                <Volume2 className="h-4 w-4" />
-                Tampilkan Pinyin
-              </>
-            )}
-          </button>
+        {showPinyinToggle && (
+          <div className="mb-4 text-center">
+            <button
+              onClick={() => setShowPinyin(!showPinyin)}
+              className="inline-flex items-center gap-2 rounded-lg bg-secondary px-4 py-2 text-sm font-medium text-secondary-foreground transition-colors hover:bg-secondary/80"
+            >
+              {showPinyin ? (
+                <>
+                  <EyeOff className="h-4 w-4" />
+                  Sembunyikan Pinyin
+                </>
+              ) : (
+                <>
+                  <Volume2 className="h-4 w-4" />
+                  Tampilkan Pinyin
+                </>
+              )}
+            </button>
 
-          {showPinyin && (
-            <p className="mt-3 animate-fade-in text-2xl font-medium text-primary">
-              {mufradat.pinyin}
-            </p>
-          )}
-        </div>
+            {showPinyin && (
+              <p className="mt-3 animate-fade-in text-2xl font-medium text-primary">
+                {vocabulary.pinyin}
+              </p>
+            )}
+          </div>
+        )}
 
         {/* Meaning toggle */}
         {showMeaningToggle && (
@@ -127,11 +131,11 @@ export const MufradatCard = forwardRef<HTMLDivElement, MufradatCardProps>(
             {showMeaning && (
               <div className="mt-4 animate-fade-in space-y-1">
                 <p className="text-xl font-medium text-foreground">
-                  {mufradat.meaning}
+                  {vocabulary.meaning}
                 </p>
-                {mufradat.english && (
+                {vocabulary.english && (
                   <p className="text-sm text-muted-foreground">
-                    ({mufradat.english})
+                    ({vocabulary.english})
                   </p>
                 )}
               </div>
@@ -143,4 +147,4 @@ export const MufradatCard = forwardRef<HTMLDivElement, MufradatCardProps>(
   }
 );
 
-MufradatCard.displayName = 'MufradatCard';
+HanziCard.displayName = 'HanziCard';

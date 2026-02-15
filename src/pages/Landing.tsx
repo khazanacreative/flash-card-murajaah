@@ -1,9 +1,8 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '@/components/Header';
-import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { GraduationCap, Users, BookOpen } from 'lucide-react';
+import logoNaga from '@/assets/logo-naga.png';
 
 const Landing = () => {
   const navigate = useNavigate();
@@ -18,15 +17,15 @@ const Landing = () => {
           <div className="text-center space-y-4">
             <div className="flex justify-center">
               <div className="relative">
-                <BookOpen className="h-16 w-16 text-primary" />
+                <img src={logoNaga} alt="Logo Naga" className="h-24 w-24 object-contain" />
                 <div className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-success animate-pulse" />
               </div>
             </div>
-            <h1 className="text-2xl font-bold text-foreground arabic-heading">
-              مُرَاجَعَةُ المُفْرَدَات
+            <h1 className="font-chinese text-3xl font-bold text-primary">
+              中文学习卡片
             </h1>
             <p className="text-lg font-semibold text-foreground">
-              Murojaah Mufradat
+              Flashcard Belajar Mandarin
             </p>
             <p className="text-muted-foreground">
               Mode Interaktif Guru & Murid
@@ -36,7 +35,7 @@ const Landing = () => {
           {/* Role selection */}
           <div className="space-y-4">
             <Card 
-              className="card-islamic p-6 cursor-pointer hover:border-primary/50 transition-all"
+              className="card-chinese p-6 cursor-pointer hover:border-primary/50 transition-all"
               onClick={() => navigate('/guru')}
             >
               <div className="flex items-center gap-4">
@@ -55,7 +54,7 @@ const Landing = () => {
             </Card>
 
             <Card 
-              className="card-islamic p-6 cursor-pointer hover:border-primary/50 transition-all"
+              className="card-chinese p-6 cursor-pointer hover:border-primary/50 transition-all"
               onClick={() => navigate('/murid')}
             >
               <div className="flex items-center gap-4">

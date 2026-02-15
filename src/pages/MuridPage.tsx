@@ -123,7 +123,7 @@ const MuridPage = () => {
               Sesi Telah Berakhir
             </h2>
             <p className="text-muted-foreground">
-              Guru telah mengakhiri sesi murojaah ini.
+              Guru telah mengakhiri sesi belajar ini.
             </p>
             <Button onClick={handleLeave}>
               Kembali ke Beranda
@@ -133,7 +133,7 @@ const MuridPage = () => {
           <div className="space-y-4">
             {/* Progress indicator */}
             <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-              <span>Soal</span>
+              <span>Kata</span>
               <span className="font-bold text-foreground text-lg">
                 {currentIndex + 1}
               </span>

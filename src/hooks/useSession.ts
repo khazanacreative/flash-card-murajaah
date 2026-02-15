@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Session, SessionResult, UserRole } from '@/types/session';
-import { Mufradat, mufradatDatabase, Level, prepareMufradatList, calculateBaseScore, updateStreak, isMembacaMengartikanCorrect } from '@/utils/scoring';
+import { Vocabulary as Mufradat, vocabularyDatabase as mufradatDatabase, HSKLevel as Level, prepareVocabularyList as prepareMufradatList, calculateBaseScore, updateStreak, isMembacaMengartikanCorrect } from '@/utils/scoring';
 import { generateSessionCode } from '@/utils/sessionCode';
 
 interface UseSessionReturn {

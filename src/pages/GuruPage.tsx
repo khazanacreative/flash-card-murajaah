@@ -13,7 +13,7 @@ import { ResetDialog } from '@/components/ResetDialog';
 import { useSession } from '@/hooks/useSession';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, History, Settings, LogOut } from 'lucide-react';
-import { Level } from '@/utils/scoring';
+import { HSKLevel } from '@/utils/scoring';
 import { AssessmentResult } from '@/utils/scoring';
 
 const GuruPage = () => {
@@ -61,7 +61,7 @@ const GuruPage = () => {
     }
   }, [currentMufradat?.id, results]);
 
-  const handleStartSession = useCallback(async (level: Level | 'all') => {
+  const handleStartSession = useCallback(async (level: HSKLevel | 'all') => {
     await createSession(level);
   }, [createSession]);
 
@@ -189,7 +189,7 @@ const GuruPage = () => {
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <Settings className="h-3 w-3" />
             <span>
-              {session.level === 'all' ? 'Semua Level' : `Level ${session.level}`}
+              {session.level === 'all' ? 'Semua HSK' : `HSK ${session.level}`}
             </span>
             <span>•</span>
             <span>Mode Acak</span>
@@ -247,7 +247,7 @@ const GuruPage = () => {
           </div>
         ) : (
           <div className="text-center text-muted-foreground">
-            Memuat mufradat...
+            Memuat kosakata...
           </div>
         )}
       </main>

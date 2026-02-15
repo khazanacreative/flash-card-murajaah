@@ -83,14 +83,14 @@ export function ControlPanel({
         </h3>
 
         <AssessmentButtons
-          label="1. Membaca tanpa harakat"
+          label="1. Membaca hanzi"
           value={membaca}
           onChange={onMembacaChange}
           disabled={hasSubmitted}
         />
 
         <AssessmentButtons
-          label="2. Mengartikan mufradat"
+          label="2. Mengartikan hanzi"
           value={mengartikan}
           onChange={onMengartikanChange}
           disabled={hasSubmitted}

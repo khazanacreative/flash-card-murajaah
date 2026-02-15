@@ -60,7 +60,7 @@ export function JoinSessionForm({ onJoin, isLoading, error }: JoinSessionFormPro
             placeholder="Masukkan kode sesi"
             value={code}
             onChange={handleCodeChange}
-            className="text-center text-2xl tracking-widest font-mono uppercase h-14"
+            className="text-center text-xl tracking-widest font-mono uppercase h-14"
             maxLength={5}
             disabled={isLoading}
             autoFocus

@@ -12,7 +12,7 @@ import { useAssessment } from '@/hooks/useAssessment';
 import { Button } from '@/components/ui/button';
 import { RotateCcw, BookOpen, Trophy, History, Settings, Download, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Level } from '@/utils/scoring';
+import { HSKLevel } from '@/utils/scoring';
 import { toPng } from 'html-to-image';
 import { FlashcardNav } from '@/components/FlashcardNav';
 
@@ -88,7 +88,7 @@ const Index = () => {
     setCurrentView('assessment');
   }, [goToMufradat]);
 
-  const handleStartGame = useCallback((level: Level | 'all') => {
+  const handleStartGame = useCallback((level: HSKLevel | 'all') => {
     startGame(level);
   }, [startGame]);
 
@@ -100,7 +100,7 @@ const Index = () => {
         pixelRatio: 2,
       });
       const link = document.createElement('a');
-      link.download = `mufradat-${currentMufradat.arabic}.png`;
+      link.download = `hanzi-${currentMufradat.hanzi}.png`;
       link.href = dataUrl;
       link.click();
     } catch (error) {

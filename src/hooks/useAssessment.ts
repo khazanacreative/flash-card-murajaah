@@ -1,13 +1,13 @@
 import { useState, useCallback, useEffect } from 'react';
 import {
-  Mufradat,
+  Vocabulary as Mufradat,
   AssessmentResult,
   SessionState,
-  Level,
+  HSKLevel as Level,
   calculateBaseScore,
   updateStreak,
   isMembacaMengartikanCorrect,
-  prepareMufradatList,
+  prepareVocabularyList as prepareMufradatList,
 } from '@/utils/scoring';
 
 const STORAGE_KEY = 'mufradat-assessment-session';
