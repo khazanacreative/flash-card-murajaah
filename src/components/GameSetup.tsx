@@ -9,12 +9,12 @@ interface GameSetupProps {
 
 export function GameSetup({ onStart }: GameSetupProps) {
   const levelOptions: { id: HSKLevel | 'all'; label: string; description: string; count: number }[] = [
-    { id: 1, label: 'HSK 1', description: 'Dasar', count: 30 },
-    { id: 2, label: 'HSK 2', description: 'Pemula', count: 30 },
-    { id: 3, label: 'HSK 3', description: 'Menengah', count: 30 },
-    { id: 4, label: 'HSK 4', description: 'Lanjutan', count: 30 },
-    { id: 5, label: 'HSK 5', description: 'Mahir', count: 30 },
-    { id: 'all', label: 'Semua HSK', description: 'Acak', count: 30 },
+    { id: 1, label: 'HSK 1', description: 'Dasar', count: 500 },
+    { id: 2, label: 'HSK 2', description: 'Pemula', count: 772 },
+    { id: 3, label: 'HSK 3', description: 'Menengah', count: 1000 },
+    { id: 4, label: 'HSK 4', description: 'Lanjutan', count: 1072 },
+    { id: 5, label: 'HSK 5', description: 'Mahir', count: 2500 },
+    { id: 'all', label: 'Semua HSK', description: 'Acak', count: 5844 },
   ];
 
   return (
