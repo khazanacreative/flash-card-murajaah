@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Header } from '@/components/Header';
 import { MufradatCard } from '@/components/MufradatCard';
 import { ScoreBoard } from '@/components/ScoreBoard';
-import { ControlPanel } from '@/components/ControlPanel';
+import { SentencePreview } from '@/components/SentencePreview';
 import { FlashcardNav } from '@/components/FlashcardNav';
 import { CompletionView } from '@/components/CompletionView';
 import { SessionCodeDisplay } from '@/components/SessionCodeDisplay';
@@ -229,21 +229,7 @@ const GuruPage = () => {
               flashAnimation={flashAnimation}
             />
 
-            <ControlPanel
-              membaca={currentMembaca}
-              mengartikan={currentMengartikan}
-              kalimat={currentKalimat}
-              onMembacaChange={setCurrentMembaca}
-              onMengartikanChange={setCurrentMengartikan}
-              onKalimatChange={setCurrentKalimat}
-              onSubmit={handleSubmit}
-              onNext={nextMufradat}
-              onPrevious={previousMufradat}
-              canSubmit={canSubmit}
-              hasSubmitted={hasSubmitted}
-              canGoNext={currentIndex < totalMufradat - 1}
-              canGoPrevious={currentIndex > 0}
-            />
+            <SentencePreview mufradat={currentMufradat} />
           </div>
         ) : (
           <div className="text-center text-muted-foreground">

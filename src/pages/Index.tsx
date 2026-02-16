@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { Header } from '@/components/Header';
 import { MufradatCard } from '@/components/MufradatCard';
 import { ScoreBoard } from '@/components/ScoreBoard';
-import { ControlPanel } from '@/components/ControlPanel';
+import { SentencePreview } from '@/components/SentencePreview';
 import { BottomNavbar, NavView } from '@/components/BottomNavbar';
 import { HistoryView } from '@/components/HistoryView';
 import { ResetDialog } from '@/components/ResetDialog';
@@ -223,21 +223,7 @@ const Index = () => {
                       mufradat={currentMufradat}
                       flashAnimation={flashAnimation}
                     />
-                    <ControlPanel
-                      membaca={currentMembaca}
-                      mengartikan={currentMengartikan}
-                      kalimat={currentKalimat}
-                      onMembacaChange={setMembaca}
-                      onMengartikanChange={setMengartikan}
-                      onKalimatChange={setKalimat}
-                      onSubmit={handleSubmit}
-                      onNext={nextMufradat}
-                      onPrevious={previousMufradat}
-                      canSubmit={canSubmit}
-                      hasSubmitted={hasSubmitted}
-                      canGoNext={currentIndex < totalMufradat - 1}
-                      canGoPrevious={currentIndex > 0}
-                    />
+                    <SentencePreview mufradat={currentMufradat} />
                   </div>
                 ) : (
                   <div className="text-center text-muted-foreground">
@@ -355,21 +341,7 @@ const Index = () => {
                     mufradat={currentMufradat}
                     flashAnimation={flashAnimation}
                   />
-                  <ControlPanel
-                    membaca={currentMembaca}
-                    mengartikan={currentMengartikan}
-                    kalimat={currentKalimat}
-                    onMembacaChange={setMembaca}
-                    onMengartikanChange={setMengartikan}
-                    onKalimatChange={setKalimat}
-                    onSubmit={handleSubmit}
-                    onNext={nextMufradat}
-                    onPrevious={previousMufradat}
-                    canSubmit={canSubmit}
-                    hasSubmitted={hasSubmitted}
-                    canGoNext={currentIndex < totalMufradat - 1}
-                    canGoPrevious={currentIndex > 0}
-                  />
+                  <SentencePreview mufradat={currentMufradat} />
                 </div>
               ) : (
                 <div className="text-center text-muted-foreground">
