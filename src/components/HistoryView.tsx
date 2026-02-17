@@ -4,11 +4,11 @@ import { Check, X, ChevronRight } from 'lucide-react';
 
 interface HistoryViewProps {
   results: AssessmentResult[];
-  mufradatList: Vocabulary[];
-  onSelectMufradat?: (index: number) => void;
+  kosakataList: Vocabulary[];
+  onSelectKosakata?: (index: number) => void;
 }
 
-export function HistoryView({ results, mufradatList, onSelectMufradat }: HistoryViewProps) {
+export function HistoryView({ results, kosakataList, onSelectKosakata }: HistoryViewProps) {
   if (results.length === 0) {
     return (
       <div className="card-chinese flex flex-col items-center justify-center rounded-xl p-8 text-center">
@@ -21,8 +21,8 @@ export function HistoryView({ results, mufradatList, onSelectMufradat }: History
     );
   }
 
-  const getVocabularyById = (id: string) => mufradatList.find((m) => m.id === id);
-  const getVocabularyIndex = (id: string) => mufradatList.findIndex((m) => m.id === id);
+  const getVocabularyById = (id: string) => kosakataList.find((m) => m.id === id);
+  const getVocabularyIndex = (id: string) => kosakataList.findIndex((m) => m.id === id);
 
   return (
     <div className="space-y-3">
@@ -32,21 +32,20 @@ export function HistoryView({ results, mufradatList, onSelectMufradat }: History
 
       <div className="space-y-2">
         {results.map((result, index) => {
-          const vocabulary = getVocabularyById(result.mufradatId);
+          const vocabulary = getVocabularyById(result.kosakataId);
           if (!vocabulary) return null;
 
           const levelInfo = getLevelInfo(vocabulary.level);
           const allCorrect = result.membaca && result.mengartikan && result.kalimat;
-          const vocabularyIndex = getVocabularyIndex(result.mufradatId);
+          const vocabularyIndex = getVocabularyIndex(result.kosakataId);
 
           return (
             <button
-              key={result.mufradatId}
-              onClick={() => onSelectMufradat?.(vocabularyIndex)}
+              key={result.kosakataId}
+              onClick={() => onSelectKosakata?.(vocabularyIndex)}
               className="card-chinese group w-full rounded-lg p-4 text-left transition-all hover:shadow-elevated"
             >
               <div className="flex items-center gap-4">
-                {/* Number badge */}
                 <div
                   className={cn(
                     'flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-sm font-bold',
@@ -58,7 +57,6 @@ export function HistoryView({ results, mufradatList, onSelectMufradat }: History
                   {index + 1}
                 </div>
 
-                {/* Content */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-baseline gap-2">
                     <span className="font-chinese text-xl text-foreground">
@@ -82,7 +80,6 @@ export function HistoryView({ results, mufradatList, onSelectMufradat }: History
                   <p className="text-sm text-muted-foreground">{vocabulary.meaning}</p>
                 </div>
 
-                {/* Score and status icons */}
                 <div className="flex flex-shrink-0 items-center gap-3">
                   <div className="flex gap-1">
                     {result.membaca ? (
@@ -117,7 +114,6 @@ export function HistoryView({ results, mufradatList, onSelectMufradat }: History
         })}
       </div>
 
-      {/* Summary */}
       <div className="card-chinese rounded-lg p-4">
         <div className="grid grid-cols-3 gap-4 text-center">
           <div>

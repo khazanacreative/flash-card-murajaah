@@ -1,11 +1,14 @@
-import { Mufradat, AssessmentResult } from '@/utils/scoring';
+import { Vocabulary } from '@/data/hskVocabulary';
+import { AssessmentResult } from '@/utils/scoring';
+
+export type Kosakata = Vocabulary;
 
 export interface Session {
   id: string;
   code: string;
   level: string;
   current_index: number;
-  mufradat_order: string[];
+  mufradat_order: string[]; // DB column name - keep as-is
   total_score: number;
   streak: number;
   max_streak: number;
@@ -17,7 +20,7 @@ export interface Session {
 export interface SessionResult {
   id: string;
   session_id: string;
-  mufradat_id: string;
+  mufradat_id: string; // DB column name - keep as-is
   membaca: boolean | null;
   mengartikan: boolean | null;
   kalimat: boolean | null;
@@ -32,8 +35,8 @@ export type UserRole = 'guru' | 'murid';
 export interface SessionContextData {
   session: Session | null;
   results: SessionResult[];
-  mufradatList: Mufradat[];
-  currentMufradat: Mufradat | null;
+  kosakataList: Kosakata[];
+  currentKosakata: Kosakata | null;
   role: UserRole;
   isLoading: boolean;
   error: string | null;

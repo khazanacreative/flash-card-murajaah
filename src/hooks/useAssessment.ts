@@ -1,16 +1,16 @@
 import { useState, useCallback, useEffect } from 'react';
 import {
-  Vocabulary as Mufradat,
+  Vocabulary as Kosakata,
   AssessmentResult,
   SessionState,
   HSKLevel as Level,
   calculateBaseScore,
   updateStreak,
   isMembacaMengartikanCorrect,
-  prepareVocabularyList as prepareMufradatList,
+  prepareVocabularyList,
 } from '@/utils/scoring';
 
-const STORAGE_KEY = 'mufradat-assessment-session';
+const STORAGE_KEY = 'kosakata-assessment-session';
 
 interface GameSettings {
   level: Level | 'all';
@@ -22,10 +22,10 @@ interface UseAssessmentReturn {
   gameSettings: GameSettings | null;
   
   // Current state
-  mufradatList: Mufradat[];
-  currentMufradat: Mufradat | null;
+  kosakataList: Kosakata[];
+  currentKosakata: Kosakata | null;
   currentIndex: number;
-  totalMufradat: number;
+  totalKosakata: number;
   
   // Scoring
   totalScore: number;
@@ -46,9 +46,9 @@ interface UseAssessmentReturn {
   setMengartikan: (value: boolean) => void;
   setKalimat: (value: boolean) => void;
   submitAssessment: () => void;
-  nextMufradat: () => void;
-  previousMufradat: () => void;
-  goToMufradat: (index: number) => void;
+  nextKosakata: () => void;
+  previousKosakata: () => void;
+  goToKosakata: (index: number) => void;
   resetSession: () => void;
   
   // Flags
@@ -60,7 +60,7 @@ interface UseAssessmentReturn {
 export function useAssessment(): UseAssessmentReturn {
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [gameSettings, setGameSettings] = useState<GameSettings | null>(null);
-  const [mufradatList, setMufradatList] = useState<Mufradat[]>([]);
+  const [kosakataList, setKosakataList] = useState<Kosakata[]>([]);
   const [session, setSession] = useState<SessionState>({
     currentIndex: 0,
     results: [],
@@ -80,9 +80,9 @@ export function useAssessment(): UseAssessmentReturn {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (parsed.gameSettings && parsed.mufradatList?.length > 0) {
+        if (parsed.gameSettings && parsed.kosakataList?.length > 0) {
           setGameSettings(parsed.gameSettings);
-          setMufradatList(parsed.mufradatList);
+          setKosakataList(parsed.kosakataList);
           setSession(parsed.session || {
             currentIndex: 0,
             results: [],
@@ -100,19 +100,19 @@ export function useAssessment(): UseAssessmentReturn {
 
   // Save to localStorage
   useEffect(() => {
-    if (isGameStarted && mufradatList.length > 0) {
+    if (isGameStarted && kosakataList.length > 0) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
         gameSettings,
-        mufradatList,
+        kosakataList,
         session,
       }));
     }
-  }, [isGameStarted, gameSettings, mufradatList, session]);
+  }, [isGameStarted, gameSettings, kosakataList, session]);
 
-  // Check if current mufradat has been submitted
+  // Check if current kosakata has been submitted
   useEffect(() => {
     const existingResult = session.results.find(
-      r => r.mufradatId === mufradatList[session.currentIndex]?.id
+      r => r.kosakataId === kosakataList[session.currentIndex]?.id
     );
     if (existingResult) {
       setCurrentMembaca(existingResult.membaca);
@@ -125,16 +125,16 @@ export function useAssessment(): UseAssessmentReturn {
       setCurrentKalimat(null);
       setHasSubmitted(false);
     }
-  }, [session.currentIndex, session.results, mufradatList]);
+  }, [session.currentIndex, session.results, kosakataList]);
 
-  const currentMufradat = mufradatList[session.currentIndex] || null;
-  const isComplete = session.results.length === mufradatList.length && mufradatList.length > 0;
+  const currentKosakata = kosakataList[session.currentIndex] || null;
+  const isComplete = session.results.length === kosakataList.length && kosakataList.length > 0;
   const canSubmit = currentMembaca !== null && currentMengartikan !== null && currentKalimat !== null;
 
   const startGame = useCallback((level: Level | 'all') => {
-    const list = prepareMufradatList(level);
+    const list = prepareVocabularyList(level);
     setGameSettings({ level });
-    setMufradatList(list);
+    setKosakataList(list);
     setSession({
       currentIndex: 0,
       results: [],
@@ -162,21 +162,20 @@ export function useAssessment(): UseAssessmentReturn {
   }, [hasSubmitted]);
 
   const submitAssessment = useCallback(() => {
-    if (!currentMufradat || !canSubmit || hasSubmitted) return;
+    if (!currentKosakata || !canSubmit || hasSubmitted) return;
 
     const baseScore = calculateBaseScore(
-      currentMufradat.level,
+      currentKosakata.level,
       currentMembaca!,
       currentMengartikan!,
       currentKalimat!
     );
 
-    // Streak bonus only applies to membaca and mengartikan (NOT kalimat)
     const membacaMengartikanCorrect = isMembacaMengartikanCorrect(currentMembaca, currentMengartikan);
     const { newStreak, bonusPoints } = updateStreak(session.streak, membacaMengartikanCorrect);
 
     const result: AssessmentResult = {
-      mufradatId: currentMufradat.id,
+      kosakataId: currentKosakata.id,
       membaca: currentMembaca,
       mengartikan: currentMengartikan,
       kalimat: currentKalimat,
@@ -195,18 +194,18 @@ export function useAssessment(): UseAssessmentReturn {
     }));
 
     setHasSubmitted(true);
-  }, [currentMufradat, canSubmit, hasSubmitted, currentMembaca, currentMengartikan, currentKalimat, session.streak]);
+  }, [currentKosakata, canSubmit, hasSubmitted, currentMembaca, currentMengartikan, currentKalimat, session.streak]);
 
-  const nextMufradat = useCallback(() => {
-    if (session.currentIndex < mufradatList.length - 1) {
+  const nextKosakata = useCallback(() => {
+    if (session.currentIndex < kosakataList.length - 1) {
       setSession(prev => ({
         ...prev,
         currentIndex: prev.currentIndex + 1,
       }));
     }
-  }, [session.currentIndex, mufradatList.length]);
+  }, [session.currentIndex, kosakataList.length]);
 
-  const previousMufradat = useCallback(() => {
+  const previousKosakata = useCallback(() => {
     if (session.currentIndex > 0) {
       setSession(prev => ({
         ...prev,
@@ -215,19 +214,19 @@ export function useAssessment(): UseAssessmentReturn {
     }
   }, [session.currentIndex]);
 
-  const goToMufradat = useCallback((index: number) => {
-    if (index >= 0 && index < mufradatList.length) {
+  const goToKosakata = useCallback((index: number) => {
+    if (index >= 0 && index < kosakataList.length) {
       setSession(prev => ({
         ...prev,
         currentIndex: index,
       }));
     }
-  }, [mufradatList.length]);
+  }, [kosakataList.length]);
 
   const resetSession = useCallback(() => {
     setIsGameStarted(false);
     setGameSettings(null);
-    setMufradatList([]);
+    setKosakataList([]);
     setSession({
       currentIndex: 0,
       results: [],
@@ -245,10 +244,10 @@ export function useAssessment(): UseAssessmentReturn {
   return {
     isGameStarted,
     gameSettings,
-    mufradatList,
-    currentMufradat,
+    kosakataList,
+    currentKosakata,
     currentIndex: session.currentIndex,
-    totalMufradat: mufradatList.length,
+    totalKosakata: kosakataList.length,
     totalScore: session.totalScore,
     streak: session.streak,
     maxStreak: session.maxStreak,
@@ -261,9 +260,9 @@ export function useAssessment(): UseAssessmentReturn {
     setMengartikan,
     setKalimat,
     submitAssessment,
-    nextMufradat,
-    previousMufradat,
-    goToMufradat,
+    nextKosakata,
+    previousKosakata,
+    goToKosakata,
     resetSession,
     isComplete,
     canSubmit,

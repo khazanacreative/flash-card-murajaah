@@ -4,17 +4,17 @@ import { Eye, EyeOff, Volume2 } from 'lucide-react';
 import { useState, forwardRef } from 'react';
 import beijingLogo from '@/assets/beijing-institute-pare.png';
 
-interface MufradatCardProps {
-  mufradat: Vocabulary;
+interface KosakataCardProps {
+  kosakata: Vocabulary;
   flashAnimation?: 'correct' | 'wrong' | null;
   showMeaningToggle?: boolean;
 }
 
-export const MufradatCard = forwardRef<HTMLDivElement, MufradatCardProps>(
-  ({ mufradat, flashAnimation, showMeaningToggle = true }, ref) => {
+export const KosakataCard = forwardRef<HTMLDivElement, KosakataCardProps>(
+  ({ kosakata, flashAnimation, showMeaningToggle = true }, ref) => {
     const [showPinyin, setShowPinyin] = useState(false);
     const [showMeaning, setShowMeaning] = useState(false);
-    const levelInfo = getLevelInfo(mufradat.level);
+    const levelInfo = getLevelInfo(kosakata.level);
 
     const levelBadgeClass = {
       1: 'badge-hsk-1',
@@ -22,7 +22,7 @@ export const MufradatCard = forwardRef<HTMLDivElement, MufradatCardProps>(
       3: 'badge-hsk-3',
       4: 'badge-hsk-4',
       5: 'badge-hsk-5',
-    }[mufradat.level];
+    }[kosakata.level];
 
     return (
       <div
@@ -33,7 +33,6 @@ export const MufradatCard = forwardRef<HTMLDivElement, MufradatCardProps>(
           flashAnimation === 'wrong' && 'animate-wrong-flash'
         )}
       >
-        {/* Decorative Chinese pattern corner */}
         <div className="absolute right-0 top-0 h-24 w-24 opacity-10">
           <svg viewBox="0 0 100 100" className="h-full w-full fill-primary">
             <circle cx="80" cy="20" r="15" />
@@ -42,43 +41,29 @@ export const MufradatCard = forwardRef<HTMLDivElement, MufradatCardProps>(
           </svg>
         </div>
 
-        {/* HSK Level badge (left) and points logo (right) */}
         <div className="mb-6 flex items-center justify-between">
-          <span
-            className={cn(
-              'rounded-full px-3 py-1 text-xs font-semibold',
-              levelBadgeClass
-            )}
-          >
+          <span className={cn('rounded-full px-3 py-1 text-xs font-semibold', levelBadgeClass)}>
             {levelInfo.label}
           </span>
           <div className="flex items-center gap-2">
-            <img 
-              src={beijingLogo} 
-              alt="Beijing Institute Pare" 
-              className="h-6 object-contain"
-            />
+            <img src={beijingLogo} alt="Beijing Institute Pare" className="h-6 object-contain" />
           </div>
         </div>
 
-        {/* Chinese divider */}
         <div className="chinese-divider mb-6">
           <span className="text-lg text-primary">龍</span>
         </div>
 
-        {/* Hanzi (Chinese character) */}
         <div className="mb-6 text-center">
           <p className="font-chinese text-6xl leading-relaxed text-foreground sm:text-7xl md:text-8xl">
-            {mufradat.hanzi}
+            {kosakata.hanzi}
           </p>
         </div>
 
-        {/* Chinese divider */}
         <div className="chinese-divider mb-4">
           <span className="text-lg text-primary">龍</span>
         </div>
 
-        {/* Pinyin toggle - above meaning */}
         <div className="mb-4 text-center">
           <button
             onClick={() => setShowPinyin(!showPinyin)}
@@ -99,12 +84,11 @@ export const MufradatCard = forwardRef<HTMLDivElement, MufradatCardProps>(
 
           {showPinyin && (
             <p className="mt-3 animate-fade-in text-2xl font-medium text-primary">
-              {mufradat.pinyin}
+              {kosakata.pinyin}
             </p>
           )}
         </div>
 
-        {/* Meaning toggle */}
         {showMeaningToggle && (
           <div className="text-center">
             <button
@@ -127,11 +111,11 @@ export const MufradatCard = forwardRef<HTMLDivElement, MufradatCardProps>(
             {showMeaning && (
               <div className="mt-4 animate-fade-in space-y-1">
                 <p className="text-xl font-medium text-foreground">
-                  {mufradat.meaning}
+                  {kosakata.meaning}
                 </p>
-                {mufradat.english && (
+                {kosakata.english && (
                   <p className="text-sm text-muted-foreground">
-                    ({mufradat.english})
+                    ({kosakata.english})
                   </p>
                 )}
               </div>
@@ -143,4 +127,4 @@ export const MufradatCard = forwardRef<HTMLDivElement, MufradatCardProps>(
   }
 );
 
-MufradatCard.displayName = 'MufradatCard';
+KosakataCard.displayName = 'KosakataCard';

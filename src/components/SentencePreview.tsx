@@ -4,7 +4,7 @@ import { Eye, EyeOff, BookOpen, Languages, MessageSquare } from 'lucide-react';
 import { Vocabulary } from '@/data/hskVocabulary';
 
 interface SentencePreviewProps {
-  mufradat: Vocabulary;
+  kosakata: Vocabulary;
 }
 
 function PreviewToggle({
@@ -56,7 +56,7 @@ function PreviewToggle({
   );
 }
 
-export function SentencePreview({ mufradat }: SentencePreviewProps) {
+export function SentencePreview({ kosakata }: SentencePreviewProps) {
   return (
     <div className="space-y-4">
       <div className="card-islamic space-y-4 rounded-xl p-4">
@@ -67,19 +67,19 @@ export function SentencePreview({ mufradat }: SentencePreviewProps) {
         <PreviewToggle
           label="Hanzi Kalimat"
           icon={BookOpen}
-          content={mufradat.kalimat}
+          content={kosakata.kalimat}
         />
 
         <PreviewToggle
           label="Pinyin Kalimat"
           icon={Languages}
-          content={mufradat.pinyinKalimat}
+          content={kosakata.pinyinKalimat}
         />
 
         <PreviewToggle
           label="Arti Kalimat"
           icon={MessageSquare}
-          content={mufradat.artiKalimat}
+          content={kosakata.artiKalimat}
         />
       </div>
     </div>

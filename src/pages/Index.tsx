@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { Header } from '@/components/Header';
-import { MufradatCard } from '@/components/MufradatCard';
+import { KosakataCard } from '@/components/KosakataCard';
 import { ScoreBoard } from '@/components/ScoreBoard';
 import { SentencePreview } from '@/components/SentencePreview';
 import { BottomNavbar, NavView } from '@/components/BottomNavbar';
@@ -25,9 +25,9 @@ const Index = () => {
   const {
     isGameStarted,
     gameSettings,
-    currentMufradat,
+    currentKosakata,
     currentIndex,
-    totalMufradat,
+    totalKosakata,
     totalScore,
     streak,
     maxStreak,
@@ -35,48 +35,37 @@ const Index = () => {
     currentMengartikan,
     currentKalimat,
     results,
-    mufradatList,
+    kosakataList,
     startGame,
     setMembaca,
     setMengartikan,
     setKalimat,
     submitAssessment,
-    nextMufradat,
-    previousMufradat,
-    goToMufradat,
+    nextKosakata,
+    previousKosakata,
+    goToKosakata,
     resetSession,
     isComplete,
     canSubmit,
     hasSubmitted,
   } = useAssessment();
 
-  // Flash animation on submit
   const handleSubmit = useCallback(() => {
     if (!canSubmit) return;
-    
     const allCorrect = currentMembaca && currentMengartikan && currentKalimat;
     setFlashAnimation(allCorrect ? 'correct' : 'wrong');
     submitAssessment();
-    
-    setTimeout(() => {
-      setFlashAnimation(null);
-    }, 500);
+    setTimeout(() => setFlashAnimation(null), 500);
   }, [canSubmit, currentMembaca, currentMengartikan, currentKalimat, submitAssessment]);
 
-  // Auto-advance after submit
   useEffect(() => {
     if (hasSubmitted && !isComplete) {
-      const timer = setTimeout(() => {
-        nextMufradat();
-      }, 1000);
+      const timer = setTimeout(() => nextKosakata(), 1000);
       return () => clearTimeout(timer);
     }
-  }, [hasSubmitted, isComplete, nextMufradat]);
+  }, [hasSubmitted, isComplete, nextKosakata]);
 
-  const handleReset = useCallback(() => {
-    setShowResetDialog(true);
-  }, []);
-
+  const handleReset = useCallback(() => setShowResetDialog(true), []);
   const confirmReset = useCallback(() => {
     resetSession();
     setShowResetDialog(false);
@@ -84,31 +73,30 @@ const Index = () => {
   }, [resetSession]);
 
   const handleSelectFromHistory = useCallback((index: number) => {
-    goToMufradat(index);
+    goToKosakata(index);
     setCurrentView('assessment');
-  }, [goToMufradat]);
+  }, [goToKosakata]);
 
   const handleStartGame = useCallback((level: HSKLevel | 'all') => {
     startGame(level);
   }, [startGame]);
 
   const handleDownloadCard = useCallback(async () => {
-    if (!cardRef.current || !currentMufradat) return;
+    if (!cardRef.current || !currentKosakata) return;
     try {
       const dataUrl = await toPng(cardRef.current, {
         backgroundColor: '#f8f6f0',
         pixelRatio: 2,
       });
       const link = document.createElement('a');
-      link.download = `hanzi-${currentMufradat.hanzi}.png`;
+      link.download = `hanzi-${currentKosakata.hanzi}.png`;
       link.href = dataUrl;
       link.click();
     } catch (error) {
       console.error('Failed to download card:', error);
     }
-  }, [currentMufradat]);
+  }, [currentKosakata]);
 
-  // Desktop sidebar navigation
   const desktopNavItems = [
     { id: 'assessment' as const, label: 'Penilaian', icon: BookOpen },
     { id: 'score' as const, label: 'Skor', icon: Trophy },
@@ -117,7 +105,6 @@ const Index = () => {
 
   const perfectCount = results.filter(r => r.membaca && r.mengartikan && r.kalimat).length;
 
-  // Show game setup if not started
   if (!isGameStarted) {
     return (
       <div className="min-h-screen bg-background pattern-geometric">
@@ -135,7 +122,6 @@ const Index = () => {
 
       {/* Desktop layout */}
       <div className="hidden md:flex">
-        {/* Sidebar */}
         <aside className="fixed left-0 top-[73px] h-[calc(100vh-73px)] w-64 overflow-y-auto border-r border-border bg-card">
           <div className="flex flex-col p-4">
             <nav className="space-y-2">
@@ -156,7 +142,6 @@ const Index = () => {
               ))}
             </nav>
 
-            {/* Game settings info */}
             {gameSettings && (
               <div className="mt-4 rounded-lg bg-muted p-3 text-center text-sm">
                 <div className="flex items-center justify-center gap-2 text-muted-foreground">
@@ -170,14 +155,13 @@ const Index = () => {
               </div>
             )}
 
-            {/* Compact scoreboard in sidebar */}
             <div className="mt-4 space-y-4">
               <ScoreBoard
                 totalScore={totalScore}
                 streak={streak}
                 maxStreak={maxStreak}
                 completedCount={results.length}
-                totalCount={totalMufradat}
+                totalCount={totalKosakata}
               />
 
               <Button
@@ -192,7 +176,6 @@ const Index = () => {
           </div>
         </aside>
 
-        {/* Main content */}
         <main className="ml-64 flex-1 p-6">
           <div className="mx-auto max-w-3xl">
             {currentView === 'assessment' && (
@@ -201,33 +184,32 @@ const Index = () => {
                   <CompletionView
                     totalScore={totalScore}
                     maxStreak={maxStreak}
-                    totalQuestions={totalMufradat}
+                    totalQuestions={totalKosakata}
                     perfectCount={perfectCount}
                     onReset={handleReset}
                   />
-                ) : currentMufradat ? (
+                ) : currentKosakata ? (
                   <div className="space-y-6">
-                    {/* Question counter above the card */}
                     <div className="space-y-6">
                       <FlashcardNav
                         current={currentIndex + 1}
-                        total={totalMufradat}
-                        onPrev={previousMufradat}
-                        onNext={nextMufradat}
+                        total={totalKosakata}
+                        onPrev={previousKosakata}
+                        onNext={nextKosakata}
                         canPrev={currentIndex > 0}
-                        canNext={currentIndex < totalMufradat - 1}
+                        canNext={currentIndex < totalKosakata - 1}
                       />
                     </div>
 
-                    <MufradatCard
-                      mufradat={currentMufradat}
+                    <KosakataCard
+                      kosakata={currentKosakata}
                       flashAnimation={flashAnimation}
                     />
-                    <SentencePreview mufradat={currentMufradat} />
+                    <SentencePreview kosakata={currentKosakata} />
                   </div>
                 ) : (
                   <div className="text-center text-muted-foreground">
-                    Memuat mufradat...
+                    Memuat kosakata...
                   </div>
                 )}
               </>
@@ -243,7 +225,7 @@ const Index = () => {
                   streak={streak}
                   maxStreak={maxStreak}
                   completedCount={results.length}
-                  totalCount={totalMufradat}
+                  totalCount={totalKosakata}
                 />
               </div>
             )}
@@ -251,8 +233,8 @@ const Index = () => {
             {currentView === 'history' && (
               <HistoryView
                 results={results}
-                mufradatList={mufradatList}
-                onSelectMufradat={handleSelectFromHistory}
+                kosakataList={kosakataList}
+                onSelectKosakata={handleSelectFromHistory}
               />
             )}
           </div>
@@ -264,7 +246,6 @@ const Index = () => {
         <div className="container mx-auto p-4">
           {currentView === 'assessment' && (
             <>
-              {/* Compact score bar with settings and download button */}
               <div className="mb-4 space-y-2">
                 {gameSettings && (
                   <div className="flex items-center justify-between">
@@ -276,7 +257,7 @@ const Index = () => {
                       <span>•</span>
                       <span>Acak</span>
                     </div>
-                    {currentMufradat && !isComplete && (
+                    {currentKosakata && !isComplete && (
                       <Button
                         variant="ghost"
                         size="sm"
@@ -296,11 +277,11 @@ const Index = () => {
                       streak={streak}
                       maxStreak={maxStreak}
                       completedCount={results.length}
-                      totalCount={totalMufradat}
+                      totalCount={totalKosakata}
                       compact
                     />
                   </div>
-                  {!gameSettings && currentMufradat && !isComplete && (
+                  {!gameSettings && currentKosakata && !isComplete && (
                     <Button
                       variant="ghost"
                       size="sm"
@@ -318,34 +299,33 @@ const Index = () => {
                 <CompletionView
                   totalScore={totalScore}
                   maxStreak={maxStreak}
-                  totalQuestions={totalMufradat}
+                  totalQuestions={totalKosakata}
                   perfectCount={perfectCount}
                   onReset={handleReset}
                 />
-              ) : currentMufradat ? (
+              ) : currentKosakata ? (
                 <div className="space-y-4">
-                  {/* Question counter above the card */}
-                  {!isComplete && currentMufradat && (
+                  {!isComplete && currentKosakata && (
                     <FlashcardNav
                       current={currentIndex + 1}
-                      total={totalMufradat}
-                      onPrev={previousMufradat}
-                      onNext={nextMufradat}
+                      total={totalKosakata}
+                      onPrev={previousKosakata}
+                      onNext={nextKosakata}
                       canPrev={currentIndex > 0}
-                      canNext={currentIndex < totalMufradat - 1}
+                      canNext={currentIndex < totalKosakata - 1}
                     />
                   )}
 
-                  <MufradatCard
+                  <KosakataCard
                     ref={cardRef}
-                    mufradat={currentMufradat}
+                    kosakata={currentKosakata}
                     flashAnimation={flashAnimation}
                   />
-                  <SentencePreview mufradat={currentMufradat} />
+                  <SentencePreview kosakata={currentKosakata} />
                 </div>
               ) : (
                 <div className="text-center text-muted-foreground">
-                  Memuat mufradat...
+                  Memuat kosakata...
                 </div>
               )}
             </>
@@ -357,28 +337,26 @@ const Index = () => {
               streak={streak}
               maxStreak={maxStreak}
               completedCount={results.length}
-              totalCount={totalMufradat}
+              totalCount={totalKosakata}
             />
           )}
 
           {currentView === 'history' && (
             <HistoryView
               results={results}
-              mufradatList={mufradatList}
-              onSelectMufradat={handleSelectFromHistory}
+              kosakataList={kosakataList}
+              onSelectKosakata={handleSelectFromHistory}
             />
           )}
         </div>
       </main>
 
-      {/* Bottom navigation (mobile only) */}
       <BottomNavbar
         currentView={currentView}
         onViewChange={setCurrentView}
         onReset={handleReset}
       />
 
-      {/* Reset confirmation dialog */}
       <ResetDialog
         open={showResetDialog}
         onOpenChange={setShowResetDialog}

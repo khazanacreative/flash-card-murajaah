@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '@/components/Header';
-import { MufradatCard } from '@/components/MufradatCard';
+import { KosakataCard } from '@/components/KosakataCard';
 import { ScoreBoard } from '@/components/ScoreBoard';
 import { SentencePreview } from '@/components/SentencePreview';
 import { FlashcardNav } from '@/components/FlashcardNav';
@@ -21,18 +21,18 @@ const GuruPage = () => {
   const {
     session,
     results,
-    mufradatList,
-    currentMufradat,
+    kosakataList,
+    currentKosakata,
     isLoading,
     error,
     createSession,
-    nextMufradat,
-    previousMufradat,
+    nextKosakata,
+    previousKosakata,
     submitAssessment,
     endSession,
     leaveSession,
     currentIndex,
-    totalMufradat,
+    totalKosakata,
     totalScore,
     streak,
     maxStreak,
@@ -47,9 +47,8 @@ const GuruPage = () => {
   const [showHistory, setShowHistory] = useState(false);
   const [showEndDialog, setShowEndDialog] = useState(false);
 
-  // Reset assessment when mufradat changes
   useEffect(() => {
-    const existingResult = results.find(r => r.mufradat_id === currentMufradat?.id);
+    const existingResult = results.find(r => r.mufradat_id === currentKosakata?.id);
     if (existingResult) {
       setCurrentMembaca(existingResult.membaca);
       setCurrentMengartikan(existingResult.mengartikan);
@@ -59,7 +58,7 @@ const GuruPage = () => {
       setCurrentMengartikan(null);
       setCurrentKalimat(null);
     }
-  }, [currentMufradat?.id, results]);
+  }, [currentKosakata?.id, results]);
 
   const handleStartSession = useCallback(async (level: HSKLevel | 'all') => {
     await createSession(level);
@@ -67,30 +66,20 @@ const GuruPage = () => {
 
   const handleSubmit = useCallback(async () => {
     if (currentMembaca === null || currentMengartikan === null || currentKalimat === null) return;
-    
     const allCorrect = currentMembaca && currentMengartikan && currentKalimat;
     setFlashAnimation(allCorrect ? 'correct' : 'wrong');
-    
     await submitAssessment(currentMembaca, currentMengartikan, currentKalimat);
-    
-    setTimeout(() => {
-      setFlashAnimation(null);
-    }, 500);
+    setTimeout(() => setFlashAnimation(null), 500);
   }, [currentMembaca, currentMengartikan, currentKalimat, submitAssessment]);
 
-  // Auto-advance after submit
   useEffect(() => {
     if (hasSubmitted && !isComplete) {
-      const timer = setTimeout(() => {
-        nextMufradat();
-      }, 1000);
+      const timer = setTimeout(() => nextKosakata(), 1000);
       return () => clearTimeout(timer);
     }
-  }, [hasSubmitted, isComplete, nextMufradat]);
+  }, [hasSubmitted, isComplete, nextKosakata]);
 
-  const handleEndSession = useCallback(() => {
-    setShowEndDialog(true);
-  }, []);
+  const handleEndSession = useCallback(() => setShowEndDialog(true), []);
 
   const confirmEndSession = useCallback(async () => {
     await endSession();
@@ -109,9 +98,8 @@ const GuruPage = () => {
   const canSubmit = currentMembaca !== null && currentMengartikan !== null && currentKalimat !== null;
   const perfectCount = results.filter(r => r.membaca && r.mengartikan && r.kalimat).length;
 
-  // Convert results to AssessmentResult format for HistoryView
   const assessmentResults: AssessmentResult[] = results.map(r => ({
-    mufradatId: r.mufradat_id,
+    kosakataId: r.mufradat_id,
     membaca: r.membaca,
     mengartikan: r.mengartikan,
     kalimat: r.kalimat,
@@ -121,17 +109,12 @@ const GuruPage = () => {
     timestamp: new Date(r.created_at),
   }));
 
-  // Setup phase
   if (!session) {
     return (
       <div className="min-h-screen bg-background pattern-geometric">
         <Header />
         <main className="container mx-auto max-w-lg p-4 py-8">
-          <Button
-            variant="ghost"
-            onClick={() => navigate('/')}
-            className="mb-4"
-          >
+          <Button variant="ghost" onClick={() => navigate('/')} className="mb-4">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Kembali
           </Button>
@@ -141,23 +124,18 @@ const GuruPage = () => {
     );
   }
 
-  // History view
   if (showHistory) {
     return (
       <div className="min-h-screen bg-background pattern-geometric">
         <Header />
         <main className="container mx-auto max-w-lg p-4 py-8">
-          <Button
-            variant="ghost"
-            onClick={() => setShowHistory(false)}
-            className="mb-4"
-          >
+          <Button variant="ghost" onClick={() => setShowHistory(false)} className="mb-4">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Kembali ke Penilaian
           </Button>
           <HistoryView
             results={assessmentResults}
-            mufradatList={mufradatList}
+            kosakataList={kosakataList}
           />
         </main>
       </div>
@@ -169,7 +147,6 @@ const GuruPage = () => {
       <Header />
       
       <main className="container mx-auto max-w-lg p-4 py-4">
-        {/* Session info bar */}
         <div className="mb-4 space-y-3">
           <div className="flex items-center justify-between">
             <Button variant="ghost" size="sm" onClick={handleBack}>
@@ -200,7 +177,7 @@ const GuruPage = () => {
             streak={streak}
             maxStreak={maxStreak}
             completedCount={results.length}
-            totalCount={totalMufradat}
+            totalCount={totalKosakata}
             compact
           />
         </div>
@@ -209,27 +186,27 @@ const GuruPage = () => {
           <CompletionView
             totalScore={totalScore}
             maxStreak={maxStreak}
-            totalQuestions={totalMufradat}
+            totalQuestions={totalKosakata}
             perfectCount={perfectCount}
             onReset={handleEndSession}
           />
-        ) : currentMufradat ? (
+        ) : currentKosakata ? (
           <div className="space-y-4">
             <FlashcardNav
               current={currentIndex + 1}
-              total={totalMufradat}
-              onPrev={previousMufradat}
-              onNext={nextMufradat}
+              total={totalKosakata}
+              onPrev={previousKosakata}
+              onNext={nextKosakata}
               canPrev={currentIndex > 0}
-              canNext={currentIndex < totalMufradat - 1}
+              canNext={currentIndex < totalKosakata - 1}
             />
 
-            <MufradatCard
-              mufradat={currentMufradat}
+            <KosakataCard
+              kosakata={currentKosakata}
               flashAnimation={flashAnimation}
             />
 
-            <SentencePreview mufradat={currentMufradat} />
+            <SentencePreview kosakata={currentKosakata} />
           </div>
         ) : (
           <div className="text-center text-muted-foreground">
