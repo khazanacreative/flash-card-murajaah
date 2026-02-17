@@ -7,7 +7,6 @@ export type AssessmentType = 'membaca' | 'mengartikan' | 'kalimat';
 export { 
   type Vocabulary, 
   vocabularyDatabase, 
-  vocabularyDatabase as mufradatDatabase,
   getVocabularyByLevel,
   getVocabularyCounts, 
   prepareVocabularyList,
@@ -16,10 +15,10 @@ export {
 
 // Legacy type alias for backward compatibility
 export type Level = HSKLevel;
-export type Mufradat = import('@/data/hskVocabulary').Vocabulary;
+export type Kosakata = import('@/data/hskVocabulary').Vocabulary;
 
 export interface AssessmentResult {
-  mufradatId: string;
+  kosakataId: string;
   membaca: boolean | null;
   mengartikan: boolean | null;
   kalimat: boolean | null;
@@ -100,7 +99,6 @@ export function calculateMaxScore(level: HSKLevel): number {
 
 /**
  * Update streak and calculate bonus
- * Returns new streak count and bonus points earned
  */
 export function updateStreak(
   currentStreak: number,
@@ -111,7 +109,6 @@ export function updateStreak(
   }
 
   const newStreak = Math.min(currentStreak + 1, MAX_STREAK_BONUS);
-  // +1 bonus point per correct answer in streak
   const bonusPoints = newStreak <= MAX_STREAK_BONUS ? 1 : 0;
 
   return { newStreak, bonusPoints };
@@ -119,7 +116,6 @@ export function updateStreak(
 
 /**
  * Check if membaca and mengartikan are both correct (for streak bonus)
- * Note: kalimat is NOT included in streak calculation
  */
 export function isMembacaMengartikanCorrect(
   membaca: boolean | null,
@@ -167,20 +163,4 @@ export function getLevelInfo(level: HSKLevel): {
     description: descriptions[level],
     maxPoints: calculateMaxScore(level),
   };
-}
-
-// Legacy function for backward compatibility
-export function getMufradatByLevel(level: HSKLevel | 'all') {
-  const { getVocabularyByLevel } = require('@/data/hskVocabulary');
-  return getVocabularyByLevel(level);
-}
-
-export function getMufradatCounts() {
-  const { getVocabularyCounts } = require('@/data/hskVocabulary');
-  return getVocabularyCounts();
-}
-
-export function prepareMufradatList(level: HSKLevel | 'all') {
-  const { prepareVocabularyList } = require('@/data/hskVocabulary');
-  return prepareVocabularyList(level);
 }

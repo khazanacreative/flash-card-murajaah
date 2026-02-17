@@ -61,7 +61,7 @@ export function CompletionView({
       <div className="rounded-lg bg-muted p-4">
         {perfectPercentage >= 80 ? (
           <p className="text-foreground">
-            <span className="font-arabic text-lg">ممتاز!</span> Luar biasa! Siswa menguasai mufradat dengan sangat baik.
+            <span className="font-arabic text-lg">ممتاز!</span> Luar biasa! Siswa menguasai kosakata dengan sangat baik.
           </p>
         ) : perfectPercentage >= 60 ? (
           <p className="text-foreground">
